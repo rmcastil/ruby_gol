@@ -40,10 +40,10 @@ class Board
   end
 
   def is_alive?(location)
-    @cells.each do |cell|
-      return true if cell.location == location
-    end
+    cell_index(location) != nil
+  end
 
-    false
+  def cell_index(location)
+    @cells.index{|cell| cell.location == location}
   end
 end
