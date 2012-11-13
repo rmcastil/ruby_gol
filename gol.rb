@@ -17,6 +17,10 @@ class Location
     @x = x
     @y = y
   end
+
+  def ==(other)
+    @x == other.x && @y == other.y
+  end
 end
 
 class Board
@@ -36,7 +40,10 @@ class Board
   end
 
   def is_alive?(location)
-    return true if @cells.count > 2
+    @cells.each do |cell|
+      return true if cell.location == location
+    end
+
     false
   end
 end

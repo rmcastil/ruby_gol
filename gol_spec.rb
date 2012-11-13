@@ -22,6 +22,16 @@ describe 'Location' do
 
     loc.x.should == 0
   end
+
+  it 'returns true if two locations share x, y coordinates' do
+    loc = Location.new(0,100)
+
+    (Location.new(0,100) == loc).should == true
+  end
+
+  it 'returns false if two locations do not share x, y coordinates' do
+    (Location.new(0,100) == Location.new(1,100)).should == false
+  end
 end
 
 describe 'Board' do
@@ -53,7 +63,7 @@ describe 'GoL' do
       board.add_cell(cell)
       board.tick!
 
-      board.is_alive?(cell).should == false
+      board.is_alive?(Location.new(1,1)).should == false
     end
 
     it 'a cell dies after one tick since it only has one neighbor' do
