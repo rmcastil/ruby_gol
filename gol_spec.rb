@@ -3,14 +3,22 @@ require_relative 'gol'
 describe 'Cell' do
   context '#neighbors' do
     it 'returns 0 if a cell has no neighbors' do
-      cell = Cell.new Location.new(2,1)
-      cell.neighbors.count.should == 0
+      cell = Cell.new(Location.new(2,1), Board.new)
+      cell.neighbors_count.should == 0
+    end
+
+    it 'returns 1 if cell has one neighbor' do
+      board = Board.new
+      cell = Cell.new(Location.new(0,0), board)
+      neighbor_cell = Cell.new(Location.new(1,0), board)
+
+      cell.neighbors_count.should == 1
     end
   end
 
   context '#location' do
     it "returns a cell's Location" do
-      cell = Cell.new Location.new(1,2)
+      cell = Cell.new(Location.new(1,2), Board.new)
       cell.location.y.should == 2
     end
   end
@@ -35,16 +43,6 @@ describe 'Location' do
 end
 
 describe 'Board' do
-  context '#add_cell' do
-    it 'can add cells to the board' do
-      board = Board.new
-      cell = Cell.new Location.new(1,2)
-      board.add_cell(cell)
-
-      board.cells.should == [cell]
-    end
-  end
-
   context '#tick!' do
     it 'can proceed to the next generation via a tick' do
       board = Board.new
@@ -58,20 +56,17 @@ end
 describe 'GoL' do
   context 'Any live cell with fewer than two live neighbours dies, as if caused by under-population.' do
     it 'a cell dies after one tick since it has 0 neighbors' do
-      cell = Cell.new Location.new(1,1)
       board = Board.new
-      board.add_cell(cell)
+      cell = Cell.new(Location.new(1,1), board)
       board.tick!
 
       board.is_alive?(Location.new(1,1)).should == false
     end
 
     it 'a cell dies after one tick since it only has one neighbor' do
-      cell = Cell.new(Location.new(0,0))
-      adjacent_cell = Cell.new(Location.new(1,0))
       board = Board.new
-      board.add_cell(cell)
-      board.add_cell(adjacent_cell)
+      cell = Cell.new(Location.new(0,0), board)
+      adjacent_cell = Cell.new(Location.new(1,0), board)
       board.tick!
 
       board.is_alive?(Location.new(0,0)).should == false
@@ -80,13 +75,10 @@ describe 'GoL' do
 
   context 'Any live cell with two or three live neighbours lives on to the next generation.' do
     before do
-      cell = Cell.new(Location.new(0,0))
-      adjacent_cell = Cell.new(Location.new(1,0))
-      another_adjacent_cell = Cell.new(Location.new(0,1))
       @board = Board.new
-      @board.add_cell(cell)
-      @board.add_cell(adjacent_cell)
-      @board.add_cell(another_adjacent_cell)
+      cell = Cell.new(Location.new(0,0), @board)
+      adjacent_cell = Cell.new(Location.new(1,0), @board)
+      another_adjacent_cell = Cell.new(Location.new(0,1), @board)
     end
 
     it 'a cell is alive after one tick since it has two neighbors' do
@@ -94,8 +86,7 @@ describe 'GoL' do
     end
 
     it 'a cell is alive after one tick since it has three neighbors' do
-      one_more_adjacent_cell = Cell.new(Location.new(1,1))
-      @board.add_cell(one_more_adjacent_cell)
+      one_more_adjacent_cell = Cell.new(Location.new(1,1), @board)
 
       @board.is_alive?(Location.new(0,0)).should == true
     end

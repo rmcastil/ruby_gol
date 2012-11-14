@@ -1,12 +1,19 @@
 class Cell
   attr_reader :location
 
-  def initialize(location)
+  def initialize(location, board)
     @location = location
+    @board = board
+    @board.add_cell(self)
   end
 
-  def neighbors
-    []
+  def neighbors_count
+    return 1 if west_neighbor?
+    0
+  end
+
+  def west_neighbor?
+    @board.is_alive? Location.new((@location.x + 1), @location.y)
   end
 end
 
@@ -36,7 +43,13 @@ class Board
   end
 
   def tick!
+    death_row = []
+    @cells.each do |cell|
+      death_row << cell if cell.neighbors_count < 2
+    end
+
     @generation += 1
+    @cells = @cells - death_row
   end
 
   def is_alive?(location)
