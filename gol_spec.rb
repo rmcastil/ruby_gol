@@ -1,7 +1,7 @@
 require_relative 'gol'
 
 describe 'Cell' do
-  context '#neighbors' do
+  context '#neighbors_count' do
     it 'returns 0 if a cell has no neighbors' do
       cell = Cell.new(Location.new(2,1), Board.new)
       cell.neighbors_count.should == 0
@@ -13,6 +13,15 @@ describe 'Cell' do
       neighbor_cell = Cell.new(Location.new(1,0), board)
 
       cell.neighbors_count.should == 1
+    end
+
+    it 'returns 2 if cell has two neighbors' do
+      board = Board.new
+      cell = Cell.new(Location.new(0,0), board)
+      north_west_cell = Cell.new(Location.new(-1, 1), board)
+      north_cell = Cell.new(Location.new(0, 1), board)
+
+      cell.neighbors_count.should == 2
     end
   end
 

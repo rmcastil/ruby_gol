@@ -1,3 +1,4 @@
+require 'pry'
 class Cell
   attr_reader :location
 
@@ -8,12 +9,21 @@ class Cell
   end
 
   def neighbors_count
-    return 1 if west_neighbor?
+    return 2 if west_neighbor? && north_west_neighbor?
+    return 1 if east_neighbor?
     0
   end
 
-  def west_neighbor?
+  def east_neighbor?
     @board.is_alive? Location.new((@location.x + 1), @location.y)
+  end
+
+  def west_neighbor?
+    @board.is_alive? Location.new(@location.x, (@location.y + 1))
+  end
+
+  def north_west_neighbor?
+    @board.is_alive? Location.new((@location.x - 1), (@location.y + 1))
   end
 end
 
