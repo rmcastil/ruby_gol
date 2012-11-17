@@ -23,6 +23,16 @@ describe 'Cell' do
 
       cell.neighbors_count.should == 2
     end
+
+    it 'returns 3 if a cell has 3 neighbors' do
+      board = Board.new
+      cell = Cell.new(Location.new(0,0), board)
+      south_west_cell = Cell.new(Location.new(-1, -1), board)
+      south_cell = Cell.new(Location.new(0, -1), board)
+      north_east_cell = Cell.new(Location.new(1, 1), board)
+
+      cell.neighbors_count.should == 3
+    end
   end
 
   context '#location' do
