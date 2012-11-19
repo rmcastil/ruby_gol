@@ -24,6 +24,14 @@ class Cell
 
     neighbors.count(true)
   end
+
+  def overcrowded?
+    neighbors_count > 3
+  end
+
+  def under_populated?
+    neighbors_count < 2
+  end
 end
 
 class Location
@@ -54,7 +62,9 @@ class Board
   def tick!
     death_row = []
     @cells.each do |cell|
-      death_row << cell if cell.neighbors_count < 2
+      if cell.under_populated? || cell.overcrowded?
+        death_row << cell
+      end
     end
 
     @generation += 1

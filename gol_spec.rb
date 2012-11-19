@@ -101,13 +101,29 @@ describe 'GoL' do
     end
 
     it 'a cell is alive after one tick since it has two neighbors' do
+      @board.tick!
       @board.is_alive?(Location.new(0,0)).should == true
     end
 
     it 'a cell is alive after one tick since it has three neighbors' do
       one_more_adjacent_cell = Cell.new(Location.new(1,1), @board)
+      @board.tick!
 
       @board.is_alive?(Location.new(0,0)).should == true
+    end
+  end
+
+  context 'Any live cell with more than three live neighbours dies, as if by overcrowding.' do
+    it 'a cell with more than three neighbors dies' do
+      board = Board.new
+      cell = Cell.new(Location.new(0,0), board)
+      north_cell = Cell.new(Location.new(0,1), board)
+      north_east_cell = Cell.new(Location.new(1,1), board)
+      east_cell = Cell.new(Location.new(1,0), board)
+      south_east_cell = Cell.new(Location.new(1,-1), board)
+
+      board.tick!
+      board.is_alive?(cell.location).should == false
     end
   end
 end
